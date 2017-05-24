@@ -20802,11 +20802,11 @@ module.exports = traverseAllChildren;
 module.exports = require('./lib/React');
 
 },{"./lib/React":158}],182:[function(require,module,exports){
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -20818,30 +20818,98 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Comp = function (_React$Component) {
-    _inherits(Comp, _React$Component);
+var Wikiarticle = function (_React$Component) {
+    _inherits(Wikiarticle, _React$Component);
 
-    function Comp(props) {
-        _classCallCheck(this, Comp);
+    function Wikiarticle(props) {
+        _classCallCheck(this, Wikiarticle);
 
-        return _possibleConstructorReturn(this, (Comp.__proto__ || Object.getPrototypeOf(Comp)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (Wikiarticle.__proto__ || Object.getPrototypeOf(Wikiarticle)).call(this, props));
+
+        _this.searchArticle = _this.searchArticle.bind(_this);
+        _this.changeValue = _this.changeValue.bind(_this);
+        _this.makeView = _this.makeView.bind(_this);
+        _this.query = "";
+        _this.result = "";
+        return _this;
     }
 
-    _createClass(Comp, [{
-        key: 'render',
+    _createClass(Wikiarticle, [{
+        key: "changeValue",
+        value: function changeValue(e) {
+            this.query = e.target.value;
+            this.setState({});
+        }
+    }, {
+        key: "searchArticle",
+        value: function searchArticle() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    this.result = JSON.parse(xmlhttp.response);
+                    this.setState({});
+                    this.makeView();
+                }
+            }.bind(this);
+            var query = this.query ? this.query : "Example";
+            xmlhttp.open("GET", "https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=" + query + "&limit=7&namespace=0&format=json", true);
+            xmlhttp.send();
+        }
+    }, {
+        key: "makeView",
+        value: function makeView() {
+            var view = "";
+            var req = this.result;
+            for (var x = 0, len = this.result[1].length; x < len; x += 1) {
+                view += "<a href=" + req[3][x] + " target=\"_blank\"><div class=\"resitem\"><h2>" + req[1][x] + "</h2><p>" + req[2][x] + "</p></div></a>";
+            }
+            document.getElementById('viewresult').innerHTML = view;
+        }
+    }, {
+        key: "render",
         value: function render() {
             return _react2.default.createElement(
-                'div',
-                null,
-                'Example'
+                "div",
+                { className: "board" },
+                _react2.default.createElement(
+                    "div",
+                    { id: "panel" },
+                    _react2.default.createElement(
+                        "h1",
+                        { className: "title" },
+                        "wiki search"
+                    ),
+                    _react2.default.createElement(
+                        "footer",
+                        { className: "foot" },
+                        "Coded by ",
+                        _react2.default.createElement(
+                            "a",
+                            { href: "https://www.freecodecamp.com/sshal", target: "_blank" },
+                            "Sergey Shalimov"
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { className: "but", href: "https://en.wikipedia.org/wiki/Special:Random", target: "_blank" },
+                        "Random Article"
+                    ),
+                    _react2.default.createElement("input", { id: "query", onChange: this.changeValue, value: this.query, onSubmit: this.searchArticle }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "imgsp" },
+                        _react2.default.createElement("img", { src: "https://image.ibb.co/mDVqAv/search_icon_1598775.jpg", alt: "search", onClick: this.searchArticle })
+                    )
+                ),
+                _react2.default.createElement("div", { id: "viewresult" })
             );
         }
     }]);
 
-    return Comp;
+    return Wikiarticle;
 }(_react2.default.Component);
 
-module.exports = Comp;
+module.exports = Wikiarticle;
 
 },{"react":181}],183:[function(require,module,exports){
 'use strict';
